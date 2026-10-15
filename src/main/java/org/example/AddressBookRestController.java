@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -40,6 +41,14 @@ public class AddressBookRestController {
     public ResponseEntity<AddressBook> getAddressBook(@PathVariable Integer bookId){
         return addressBookRepository.findById(bookId)
                 .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // New feature: list only the buddies of an address book
+    @GetMapping("/addressbooks/{bookId}/buddies")
+    public ResponseEntity<List<BuddyInfo>> getBuddies(@PathVariable Integer bookId){
+        return addressBookRepository.findById(bookId)
+                .map(book -> ResponseEntity.ok(book.getBuddies()))
                 .orElse(ResponseEntity.notFound().build());
     }
 }

@@ -9,7 +9,8 @@ import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "spring.datasource.url=jdbc:h2:mem:integrationdb;DB_CLOSE_DELAY=-1")
 class AddressBookIntegrationTest {
 
     @Autowired
@@ -17,20 +18,17 @@ class AddressBookIntegrationTest {
 
     @Test
     void createBookAddBuddyThenFetchIt() {
-        // POST: create a book
         ResponseEntity<AddressBook> created =
                 restTemplate.postForEntity("/api/addressbooks", null, AddressBook.class);
         assertEquals(HttpStatus.OK, created.getStatusCode());
         int id = created.getBody().getId();
 
-        // POST: add a buddy to it
         BuddyInfo buddy = new BuddyInfo("Bob", "613-555-9999", "Toronto");
         ResponseEntity<AddressBook> updated =
                 restTemplate.postForEntity("/api/addressbooks/" + id + "/buddies", buddy, AddressBook.class);
         assertEquals(HttpStatus.OK, updated.getStatusCode());
         assertEquals(1, updated.getBody().getBuddies().size());
 
-        // GET: fetch it back and verify
         ResponseEntity<AddressBook> fetched =
                 restTemplate.getForEntity("/api/addressbooks/" + id, AddressBook.class);
         assertEquals(HttpStatus.OK, fetched.getStatusCode());
@@ -41,6 +39,34 @@ class AddressBookIntegrationTest {
     void getUnknownBookReturns404() {
         ResponseEntity<AddressBook> response =
                 restTemplate.getForEntity("/api/addressbooks/99999", AddressBook.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    // GET /api/addressbooks/{id}/buddies
+
+    @Test
+    void listBuddiesOfAddressBook() {
+        int id = restTemplate.postForEntity("/api/addressbooks", null, AddressBook.class)
+                .getBody().getId();
+
+        restTemplate.postForEntity("/api/addressbooks/" + id + "/buddies",
+                new BuddyInfo("Carol", "613-555-0003", "Montreal"), AddressBook.class);
+        restTemplate.postForEntity("/api/addressbooks/" + id + "/buddies",
+                new BuddyInfo("Dan", "613-555-0004", "Calgary"), AddressBook.class);
+
+        ResponseEntity<BuddyInfo[]> response =
+                restTemplate.getForEntity("/api/addressbooks/" + id + "/buddies", BuddyInfo[].class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, response.getBody().length);
+        assertEquals("Carol", response.getBody()[0].getName());
+        assertEquals("Dan", response.getBody()[1].getName());
+    }
+
+    @Test
+    void listBuddiesOfUnknownBookReturns404() {
+        ResponseEntity<String> response =
+                restTemplate.getForEntity("/api/addressbooks/99999/buddies", String.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }

@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.datasource.url=jdbc:h2:mem:mockdb;DB_CLOSE_DELAY=-1")
 @AutoConfigureMockMvc
 class AddressBookControllerMockTest {
 
@@ -59,5 +59,16 @@ class AddressBookControllerMockTest {
     void getMissingAddressBookReturns404() throws Exception {
         mockMvc.perform(get("/api/addressbooks/99999"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void listBuddiesOfBook() throws Exception {
+        AddressBook book = new AddressBook();
+        book.addBuddy(new BuddyInfo("Eve", "613-555-0005", "Halifax"));
+        book = addressBookRepository.save(book);
+
+        mockMvc.perform(get("/api/addressbooks/" + book.getId() + "/buddies"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("Eve"));
     }
 }
