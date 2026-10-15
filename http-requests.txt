@@ -1,0 +1,38 @@
+=
+SYSC 4806 Lab 4 - HTTP Requests Log
+Student ID: 101324150
+==
+
+1. CREATE AN ADDRESSBOOK
+-------------------------------------------------------------------
+curl -X POST http://localhost:8080/api/addressbooks \
+     -H "Content-Type: application/json"
+
+Response:
+{"id":1,"buddies":[]}
+
+2. CREATE BUDDIES & ADD TO ADDRESSBOOK
+-------------------------------------------------------------------
+curl -X POST http://localhost:8080/api/addressbooks/1/buddies \
+     -H "Content-Type: application/json" \
+     -d "{\"name\": \"Alice Smith\", \"phoneNumber\": \"613-111-2222\", \"address\": \"Ottawa\"}"
+
+curl -X POST http://localhost:8080/api/addressbooks/1/buddies \
+     -H "Content-Type: application/json" \
+     -d "{\"name\": \"Bob Jones\", \"phoneNumber\": \"613-333-4444\", \"address\": \"Toronto\"}"
+
+3. SPRING DATA REST ENDPOINTS (SPRING DATA REST AUTO-GENERATED)
+-------------------------------------------------------------------
+Create Buddy via Spring Data REST:
+curl -X POST http://localhost:8080/buddies \
+     -H "Content-Type: application/json" \
+     -d "{\"name\": \"Charlie Brown\", \"phoneNumber\": \"613-555-6666\", \"address\": \"Montreal\"}"
+
+Link Buddy to AddressBook via Spring Data REST (URI-List):
+curl -X PUT http://localhost:8080/addressBooks/1/buddies \
+     -H "Content-Type: text/uri-list" \
+     -d "http://localhost:8080/buddies/3"
+
+4. VIEW THYMELEAF GUI IN BROWSER
+-------------------------------------------------------------------
+http://localhost:8080/addressbook?id=1

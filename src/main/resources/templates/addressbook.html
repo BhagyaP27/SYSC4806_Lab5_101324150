@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>AddressBook GUI</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        table { border-collapse: collapse; width: 60%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h2>AddressBook Details</h2>
+<p><strong>AddressBook ID:</strong> <span th:text="${addressBook.id}">1</span></p>
+
+<h3>Buddies</h3>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Phone Number</th>
+        <th>Address</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="buddy : ${buddies}">
+        <td th:text="${buddy.id}">1</td>
+        <td th:text="${buddy.name}">Name</td>
+        <td th:text="${buddy.phoneNumber}">Phone</td>
+        <td th:text="${buddy.address}">Address</td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(buddies)}">
+        <td colspan="4">No buddies found in this AddressBook.</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
