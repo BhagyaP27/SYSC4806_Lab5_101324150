@@ -9,8 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(properties = "spring.datasource.url=jdbc:h2:mem:mockdb;DB_CLOSE_DELAY=-1")
 @AutoConfigureMockMvc
@@ -71,4 +70,32 @@ class AddressBookControllerMockTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Eve"));
     }
+
+    @Test
+    void testHomePageListsAddressBooks() throws Exception {
+        addressBookRepository.save(new AddressBook());
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(model().attributeExists("addressBooks"));
+    }
+
+    @Test
+    void testCreateAddressBookRedirectsHome() throws Exception {
+        mockMvc.perform(post("/addressbook/create"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    void testAddBuddyFormRedirectsBack() throws Exception {
+        AddressBook book = addressBookRepository.save(new AddressBook());
+        mockMvc.perform(post("/addressbook/" + book.getId() + "/buddies")
+                        .param("name", "Zed")
+                        .param("phoneNumber", "555-0000")
+                        .param("address", "Ottawa"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/addressbook?id=" + book.getId()));
+    }
+
 }

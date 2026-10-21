@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>AddressBooks</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        table { border-collapse: collapse; width: 60%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h2>AddressBooks</h2>
+
+<table>
+    <thead>
+    <tr><th>ID</th><th>Buddies</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${addressBooks}">
+        <td><a th:href="@{/addressbook(id=${book.id})}" th:text="${book.id}">1</a></td>
+        <td th:text="${#lists.size(book.buddies)}">0</td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(addressBooks)}">
+        <td colspan="2">No address books yet.</td>
+    </tr>
+    </tbody>
+</table>
+
+<form th:action="@{/addressbook/create}" method="post">
+    <button type="submit">Create new AddressBook</button>
+</form>
+</body>
+</html>

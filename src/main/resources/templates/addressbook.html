@@ -37,5 +37,14 @@
     </tr>
     </tbody>
 </table>
+<h3>Add a buddy</h3>
+<form th:action="@{/addressbook/{id}/buddies(id=${addressBook.id})}" method="post">
+    <p><label>Name: <input type="text" name="name" required></label></p>
+    <p><label>Phone: <input type="text" name="phoneNumber" required></label></p>
+    <p><label>Address: <input type="text" name="address" required></label></p>
+    <button type="submit">Add buddy</button>
+</form>
+
+<p><a th:href="@{/}">Back to all address books</a></p>
 </body>
 </html>

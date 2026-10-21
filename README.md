@@ -2,7 +2,7 @@
 
 ![Java CI with Maven](https://github.com/BhagyaP27/SYSC4806_Lab5_101324150/actions/workflows/maven.yml/badge.svg)
 
-**Name:** Bhagya P.
+**Name:** Bhagya Patel.
 **Student number:** 101324150
 
 **Azure deployment:** https://friendlister-c6a9ahabebbhdwbr.canadacentral-01.azurewebsites.net/addressbook
