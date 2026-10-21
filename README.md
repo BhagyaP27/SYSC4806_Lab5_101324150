@@ -1,11 +1,11 @@
-# SYSC 4806 – Lab 5: AddressBook App
+# SYSC 4806 – Lab 6: AddressBook App
 
 ![Java CI with Maven](https://github.com/BhagyaP27/SYSC4806_Lab5_101324150/actions/workflows/maven.yml/badge.svg)
 
 **Name:** Bhagya Patel.
 **Student number:** 101324150
 
-**Azure deployment:** https://friendlister-c6a9ahabebbhdwbr.canadacentral-01.azurewebsites.net/addressbook
+**Azure deployment:** https://friendlister-c6a9ahabebbhdwbr.canadacentral-01.azurewebsites.net/
 
 (Free tier: the first load may take a minute or two.)
 
